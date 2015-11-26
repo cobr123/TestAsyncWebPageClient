@@ -1,0 +1,41 @@
+import sys
+import eventlet
+from eventlet.green import urllib2
+
+class AsyncWebPageClient:
+    threadCnt = 0
+
+    def __init__(self, cnt=4):
+        self.threadCnt = cnt
+
+    def get_pages(self, urls):
+        pool = eventlet.GreenPool(self.threadCnt)
+        for result in pool.imap(get_result, urls):
+            yield result
+
+
+def get_result(url):
+    try:
+        o = urllib2.urlopen(url)
+        return {'status_code': o.getcode(), 'url': url, 'content': o.read()}
+    except:
+        return {'status_code': -1, 'err': sys.exc_info()[0], 'url': url}
+
+
+def print_result(result):
+    print(result['url'])
+    if result['status_code'] == -1:
+        print(result['err'])
+    else:
+        print(len(res['content']))
+
+
+if __name__ == "__main__":
+    test_urls = ['http://www.foxnews.com/',
+                 'http://some-made-up-domain.com/',
+                 'http://www.cnn.com/',
+                 'http://europe.wsj.com/',
+                 'http://www.bbc.co.uk/']
+    client = AsyncWebPageClient()
+    for res in client.get_pages(test_urls):
+        print_result(res)
