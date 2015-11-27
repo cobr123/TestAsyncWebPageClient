@@ -2,6 +2,7 @@ import sys
 import eventlet
 from eventlet.green import urllib2
 
+
 class AsyncWebPageClient:
     threadCnt = 0
 
@@ -18,8 +19,8 @@ def get_result(url):
     try:
         o = urllib2.urlopen(url)
         return {'status_code': o.getcode(), 'url': url, 'content': o.read()}
-    except:
-        return {'status_code': -1, 'err': sys.exc_info()[0], 'url': url}
+    except Exception, e:
+        return {'status_code': -1, 'err': e.__str__(), 'url': url}
 
 
 def print_result(result):
