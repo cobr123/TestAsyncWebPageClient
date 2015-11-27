@@ -1,5 +1,3 @@
-import multiprocessing
-import traceback
 from multiprocessing import Pool
 from eventlet.green import urllib2
 
