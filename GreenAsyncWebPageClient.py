@@ -1,4 +1,3 @@
-import sys
 import eventlet
 from eventlet.green import urllib2
 
